@@ -28,6 +28,7 @@ def Main():
 
     while(True):
         meteorological_statistics = {
+            'weather': 'rain',
             'temperature': round(random.uniform(-5, 40), 1),
             'date': random_date('01/01/2012', '05/11/2021', '%d/%m/%Y', random.random()),
             'hour': random_hour(),
