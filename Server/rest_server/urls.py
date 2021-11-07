@@ -1,9 +1,7 @@
+from . import views
 from django.urls import path
 
 
-app_name = 'rest_server'
-
-
 urlpatterns = [
-    
+    path('add_statistic/', views.add_statistic),
 ]
