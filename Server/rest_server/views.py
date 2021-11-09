@@ -22,6 +22,7 @@ def add_statistic(request):
     return JsonResponse('success', safe=False)
 
 
+@csrf_exempt
 def get_statistics(request):
     get_date = request.GET.get('date')
     if not get_date: get_date = date.today()
