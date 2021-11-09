@@ -1,9 +1,8 @@
 import json
 from . import models
 from datetime import date
-from django.http import JsonResponse
-from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http.response import HttpResponse, JsonResponse
 
 
 @csrf_exempt
