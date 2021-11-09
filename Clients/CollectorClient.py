@@ -1,8 +1,8 @@
-import os
 import json
 import time
 import random
 import requests
+from datetime import date
 
 def random_date(start, end, format, prop):
     end_time = time.mktime(time.strptime(end, format))
@@ -13,8 +13,8 @@ def random_date(start, end, format, prop):
 
 def random_hour():
     hour = random.randrange(0, 24)
-    minute = random.randint(0, 60)
-    second = random.randrange(0, 60)
+    minute = random.randint(0, 59)
+    second = random.randrange(0, 59)
 
     return (f'{"0" + str(hour) if hour < 10 else hour}:'
             f'{"0" + str(minute) if minute < 10 else minute}:'
@@ -45,7 +45,7 @@ def Main():
         meteorological_statistics = {
             'weather': random_weather(),
             'temperature': round(random.uniform(-5, 40), 1),
-            'date': random_date('2021-01-01', '2021-11-01', '%Y-%m-%d', random.random()),
+            'date': random_date('2021-01-01', str(date.today()), '%Y-%m-%d', random.random()),
             'hour': random_hour(),
         }            
 
