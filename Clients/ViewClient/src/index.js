@@ -37,7 +37,10 @@ function putOnTable(statistics) {
 
     for(i = 0; i < statistics.length; i++) {
         var current = statistics[i];
+        var currentId = current['id'];
+
         var newRow = document.createElement('tr');
+        newRow.id = `stat-${currentId}`;
 
         for(var key in current) {
             var newCell = document.createElement('td');
@@ -49,17 +52,39 @@ function putOnTable(statistics) {
         var editCell = document.createElement('button');
         editCell.setAttribute('class', 'btn btn-warning');
         editCell.innerHTML = '<i class="fas fa-edit text-white"></i>';
+        
         var newCell = document.createElement('td');
         newCell.appendChild(editCell)
         newRow.appendChild(newCell);
 
         var deleteCell = document.createElement('button');
         deleteCell.setAttribute('class', 'btn btn-danger');
+        deleteCell.setAttribute('onclick', `deleteStat(${currentId})`);
         deleteCell.innerHTML = '<i class="fas fa-trash-alt"></i>';
-        var newCell = document.createElement('td');
+
+        newCell = document.createElement('td');
         newCell.appendChild(deleteCell)
         newRow.appendChild(newCell);
 
         tableBody.appendChild(newRow);
+    }
+}
+
+function deleteStat(statId) {
+    if (confirm('Are you sure you want to delete this stat?')) {
+        $.ajax({
+            type: 'DELETE',
+            url: `http://127.0.0.1:8000/delete/${statId}`,
+            dataType: 'json',
+            success: (response) => {
+                alert(`Success, ${response.message}`);
+                var rowElement = document.getElementById(`stat-${statId}`);
+                rowElement.parentNode.removeChild(rowElement);
+            },
+            error: (response) => {
+                console.log(response.responseJSON.message);
+                alert(`Error! ${response.responseJSON.message}`);
+            },
+        });
     }
 }
