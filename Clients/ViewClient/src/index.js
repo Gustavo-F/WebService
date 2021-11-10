@@ -1,4 +1,4 @@
-$('#datepicker').datepicker({
+$('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     todayBtn: true, 
     todayHighlight: true, 
@@ -51,6 +51,7 @@ function putOnTable(statistics) {
 
         var editCell = document.createElement('button');
         editCell.setAttribute('class', 'btn btn-warning');
+        editCell.setAttribute('onclick', 'openModal("editModal")');
         editCell.innerHTML = '<i class="fas fa-edit text-white"></i>';
         
         var newCell = document.createElement('td');
@@ -87,4 +88,8 @@ function deleteStat(statId) {
             },
         });
     }
+}
+
+function openModal(modalId) {
+    $(`#${modalId}`).modal('show');
 }
