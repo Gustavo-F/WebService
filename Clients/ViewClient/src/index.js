@@ -15,6 +15,8 @@ $('#dateForm').submit(function(event) {
     getStatistics(date);
 });
 
+var statistics = []
+
 function getStatistics(date) {
     $.ajax({
         type: 'GET',
@@ -22,6 +24,7 @@ function getStatistics(date) {
         dataType: 'json',
         data: {date: date},
         success: (response) => {
+            statistics = response;
             putOnTable(response);
         },
         error: (response) => {
@@ -51,7 +54,7 @@ function putOnTable(statistics) {
 
         var editCell = document.createElement('button');
         editCell.setAttribute('class', 'btn btn-warning');
-        editCell.setAttribute('onclick', 'openModal("editModal")');
+        editCell.setAttribute('onclick', `openModal("editModal", ${i})`);
         editCell.innerHTML = '<i class="fas fa-edit text-white"></i>';
         
         var newCell = document.createElement('td');
@@ -90,6 +93,25 @@ function deleteStat(statId) {
     }
 }
 
-function openModal(modalId) {
+function openModal(modalId, listPosition) {
+    stat = statistics[listPosition];
+
+    document.getElementById('statId').value = stat.id;
+    document.getElementById('date').value = stat.date;
+    document.getElementById('hour').value = stat.hour;
+    document.getElementById('temperature').value = stat.temperature;
+    
+    var weatherOptions = document.getElementById('weather').getElementsByTagName('option')
+    for (i = 0; i < weatherOptions.length; i++) {
+        option = weatherOptions[i];
+        console.log(option);
+
+        if (option.innerText == stat.weather) {
+            option.setAttribute('selected', true);
+        } else {
+            option.removeAttribute('selected');
+        }
+    }
+
     $(`#${modalId}`).modal('show');
 }
