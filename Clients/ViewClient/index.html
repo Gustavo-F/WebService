@@ -59,19 +59,19 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="put">
+                        <form action="" method="put" id="updateStatForm">
                             <div class="form-row">
                                 <div class="col-lg-2 form-group">
                                     <label for="statId">ID:</label>
-                                    <input type="text" id="statId" class="form-control" disabled>
+                                    <input type="text" name="statId" id="statId" class="form-control" disabled>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label for="date">Date:</label>
-                                    <input type="text" id="date" class="datepicker form-control" required autocomplete="off">
+                                    <input type="text" name="date" id="date" class="datepicker form-control" required autocomplete="off">
                                 </div>
                                 <div class="col-lg-4 form-group">
                                     <label for="hour">Hour:</label>
-                                    <input type="text" id="hour" class="form-control" required>
+                                    <input type="text" name="hour" id="hour" class="form-control" required>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -79,17 +79,23 @@
                                     <label for="weather">Weather:</label>
                                     <select name="weather" id="weather" class="custom-select" required>
                                         <option selected disabled>Select Weather</option>
-                                        <option value="3">Sunny</option>
-                                        <option value="1">Rainy</option>
-                                        <option value="2">Cloudy</option>
+                                        <option value="Sunny">Sunny</option>
+                                        <option value="Rainy">Rainy</option>
+                                        <option value="Cloudy">Cloudy</option>
                                     </select> 
                                 </div>
                                 <div class="col-lg-3">
                                     <label for="temperature">Temperature</label>
-                                    <input type="number" id="temperature" class="form-control" step="0.1" required>
+                                    <input type="number" name="temperature" id="temperature" class="form-control" step="0.1" required>
                                 </div>
                             </div>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-row">
+                            <button class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                            <input type="submit" form="updateStatForm" class="ml-3 btn btn-primary" value="Salvar">
+                        </div>
                     </div>
                 </div>
             </div>

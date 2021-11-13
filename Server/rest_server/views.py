@@ -1,7 +1,6 @@
 import json
-
-from django.http import response
 from . import models
+from django.http.request import QueryDict
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import HttpResponse, JsonResponse
@@ -44,11 +43,33 @@ def delete_stat(request, pk):
 
     if request.method == 'DELETE':
         stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
-        print(f'\n{stat}\n')
         stat.delete()
 
         status_code = 200
         response_message['message'] = 'Statistic deleted successfully!'
+
+    response = JsonResponse(response_message, safe=False)
+    response.status_code = status_code
+    return response
+
+
+@csrf_exempt
+def update_stat(request, pk):
+    status_code = 403
+    response_message = {'message': 'Unauthorized access.'}
+
+    if request.method == 'PUT':
+        stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
+        put_params = json.loads(QueryDict(request.body)['statData'])
+
+        stat.date = put_params['date']
+        stat.hour = put_params['hour']
+        stat.weather = put_params['weather']
+        stat.temperature = put_params['temperature']
+        stat.save()
+
+        status_code = 200
+        response_message['message'] = 'Stat updated successfully!'
 
     response = JsonResponse(response_message, safe=False)
     response.status_code = status_code

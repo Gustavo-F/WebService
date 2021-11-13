@@ -104,8 +104,7 @@ function openModal(modalId, listPosition) {
     var weatherOptions = document.getElementById('weather').getElementsByTagName('option')
     for (i = 0; i < weatherOptions.length; i++) {
         option = weatherOptions[i];
-        console.log(option);
-
+        
         if (option.innerText == stat.weather) {
             option.setAttribute('selected', true);
         } else {
@@ -115,3 +114,28 @@ function openModal(modalId, listPosition) {
 
     $(`#${modalId}`).modal('show');
 }
+
+$('#updateStatForm').on('submit', (event) => {
+    event.preventDefault();
+    const statId = document.getElementById('statId').value;
+    const formData = new FormData(event.target);
+    const data = Array.from(formData.entries()).reduce((memo, pair) => ({
+        ...memo,
+        [pair[0]]: pair[1],
+    }), {});
+
+    $.ajax({
+        type: 'PUT',
+        url: `http://127.0.0.1:8000/update/${statId}`,
+        dataType: 'json',
+        data: {
+            statData: JSON.stringify(data),
+        },
+        success: (response) => {
+            console.log(response);
+        },
+        error: (response) => {
+            console.log(response);
+        },
+    });
+});
