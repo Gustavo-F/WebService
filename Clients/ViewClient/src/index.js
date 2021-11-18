@@ -1,7 +1,8 @@
 $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
-    todayBtn: true, 
+    todayBtn: 'linked', 
     todayHighlight: true, 
+    clearBtn: true,
 });
 
 $(document).ready(() => {
@@ -47,6 +48,7 @@ function putOnTable(statistics) {
 
         for(var key in current) {
             var newCell = document.createElement('td');
+            newCell.id = `${key}-${currentId}`
             newCell.innerText = current[key];
 
             newRow.appendChild(newCell);
@@ -119,23 +121,45 @@ $('#updateStatForm').on('submit', (event) => {
     event.preventDefault();
     const statId = document.getElementById('statId').value;
     const formData = new FormData(event.target);
-    const data = Array.from(formData.entries()).reduce((memo, pair) => ({
+    var data = Array.from(formData.entries()).reduce((memo, pair) => ({
         ...memo,
         [pair[0]]: pair[1],
     }), {});
+    data = JSON.stringify(data);
 
     $.ajax({
         type: 'PUT',
         url: `http://127.0.0.1:8000/update/${statId}`,
         dataType: 'json',
         data: {
-            statData: JSON.stringify(data),
+            statData: data,
         },
         success: (response) => {
-            console.log(response);
+            updateTableRowData(`stat-${statId}`, data);
+            
+            $(`#editModal`).modal('hide');
+            $.toast({
+                heading: 'Success',
+                text: response.message,
+                showHideTransition: 'slide',
+                icon: 'success',
+                hideAfter: 3500,
+            });
         },
         error: (response) => {
             console.log(response);
         },
     });
 });
+
+function updateTableRowData(rowId, objData) {
+    const element = document.getElementById(rowId);
+    objData = JSON.parse(objData);
+
+    for(let i = 1; i < element.children.length - 2; i++) {
+        var currentChild = element.children[i];
+        var key = currentChild.id.split('-')[0];
+        
+        currentChild.innerText = objData[key];  
+    }
+}
