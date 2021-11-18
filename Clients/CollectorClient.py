@@ -36,7 +36,8 @@ def send_statistics(client, meteorological_statistics):
         next='/',
     ))
     
-    print(response)
+    response = json.loads(response.content.decode())
+    print(response['message'])
 
 def Main():
     client = requests.session()

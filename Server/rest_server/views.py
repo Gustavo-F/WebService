@@ -8,38 +8,61 @@ from django.http.response import HttpResponse, JsonResponse
 
 @csrf_exempt
 def add_statistic(request):
+    status_code = 405
+    response_message = {'message': f'405 - Method {request.method} Not Allowed.'}
+
     if request.POST:
         statistics = json.loads(request.POST.get('statistics'))
-
-        meteorological_statistics = models.MeteorologicalStatistics(
-            date = statistics['date'],
-            hour = statistics['hour'],
-            weather = statistics['weather'],
-            temperature = statistics['temperature'],
-        )
-
-        meteorological_statistics.save()
     
-    return JsonResponse('success', safe=False)
+        if not statistics:
+            status_code = 400 
+            response_message = {'message': 'Data not sent.'}  
+        else: 
+            meteorological_statistics = models.MeteorologicalStatistics(
+                date = statistics['date'],
+                hour = statistics['hour'],
+                weather = statistics['weather'],
+                temperature = statistics['temperature'],
+            )
+            meteorological_statistics.save()
+
+            status_code = 200
+            response_message = {'message': 'Stat successfully saved.'}
+    
+    response = JsonResponse(response_message, safe=False)
+    response.status_code = status_code
+    return response
 
 
 @csrf_exempt
 def get_statistics(request):
-    date = request.GET.get('date')
-    if not date:
-        statistics = models.MeteorologicalStatistics.objects.order_by('-date')[:20]
-    else:
-        statistics = models.MeteorologicalStatistics.objects.filter(date=date).order_by('-date')
+    status_code = 405
+    response_message = {'message': f'405 - Method {request.method} Not Allowed.'}
 
-    statistics = [obj.as_json() for obj in statistics]
+    if request.method == 'GET':
+        date = request.GET.get('date')
+        
+        if not date:
+            statistics = models.MeteorologicalStatistics.objects.order_by('-date')[:20]
+        else:
+            statistics = models.MeteorologicalStatistics.objects.filter(date=date).order_by('-date')
 
-    return HttpResponse(json.dumps(statistics), content_type='application/json')
+        statistics = [obj.as_json() for obj in statistics]
+        status_code = 200
+         
+    response = JsonResponse(
+        statistics if status_code == 200 else response_message,
+        safe=False
+    )
+    
+    response.status_code = status_code
+    return response
 
 
 @csrf_exempt
 def delete_stat(request, pk):
-    status_code = 403
-    response_message = {'message': 'Unauthorized access.'}
+    status_code = 405
+    response_message = {'message': f'405 - Method {request.method} Not Allowed.'}
 
     if request.method == 'DELETE':
         stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
@@ -55,8 +78,8 @@ def delete_stat(request, pk):
 
 @csrf_exempt
 def update_stat(request, pk):
-    status_code = 403
-    response_message = {'message': 'Unauthorized access.'}
+    status_code = 405
+    response_message = {'message': f'405 - Method {request.method} Not Allowed.'}
 
     if request.method == 'PUT':
         stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
