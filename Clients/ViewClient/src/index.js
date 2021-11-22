@@ -16,6 +16,26 @@ $('#dateForm').submit(function(event) {
     getStatistics(date);
 });
 
+function toastSuccess(message) {
+    $.toast({
+        heading: 'Success',
+        text: message,
+        showHideTransition: 'slide',
+        icon: 'success',
+        hideAfter: 3500,
+    });
+}
+
+function toastError(message) {
+    $.toast({
+        heading: 'Error',
+        text: message,
+        showHideTransition: 'slide',
+        icon: 'error',
+        hideAfter: 3500,
+    });
+}
+
 var statistics = []
 
 function getStatistics(date) {
@@ -83,13 +103,13 @@ function deleteStat(statId) {
             url: `http://127.0.0.1:8000/delete/${statId}`,
             dataType: 'json',
             success: (response) => {
-                alert(`Success, ${response.message}`);
+                toastSuccess(response.message);
+
                 var rowElement = document.getElementById(`stat-${statId}`);
                 rowElement.parentNode.removeChild(rowElement);
             },
             error: (response) => {
-                console.log(response.responseJSON.message);
-                alert(`Error! ${response.responseJSON.message}`);
+                toastError(response.responseJSON.message);
             },
         });
     }
@@ -138,16 +158,10 @@ $('#updateStatForm').on('submit', (event) => {
             updateTableRowData(`stat-${statId}`, data);
             
             $(`#editModal`).modal('hide');
-            $.toast({
-                heading: 'Success',
-                text: response.message,
-                showHideTransition: 'slide',
-                icon: 'success',
-                hideAfter: 3500,
-            });
+            toastSuccess(response.message);
         },
         error: (response) => {
-            console.log(response);
+            toastError(response.responseJSON.message);
         },
     });
 });

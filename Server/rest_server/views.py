@@ -65,11 +65,15 @@ def delete_stat(request, pk):
     response_message = {'message': f'405 - Method {request.method} Not Allowed.'}
 
     if request.method == 'DELETE':
-        stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
-        stat.delete()
+        try:
+            stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
+            stat.delete()
 
-        status_code = 200
-        response_message['message'] = 'Statistic deleted successfully!'
+            status_code = 200
+            response_message['message'] = 'Statistic deleted successfully!'
+        except:
+            status_code = 404
+            response_message['message'] = 'Stat not found.'
 
     response = JsonResponse(response_message, safe=False)
     response.status_code = status_code
@@ -82,17 +86,21 @@ def update_stat(request, pk):
     response_message = {'message': f'405 - Method {request.method} Not Allowed.'}
 
     if request.method == 'PUT':
-        stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
-        put_params = json.loads(QueryDict(request.body)['statData'])
+        try:
+            stat = get_object_or_404(models.MeteorologicalStatistics, pk=pk)
+            put_params = json.loads(QueryDict(request.body)['statData'])
 
-        stat.date = put_params['date']
-        stat.hour = put_params['hour']
-        stat.weather = put_params['weather']
-        stat.temperature = put_params['temperature']
-        stat.save()
+            stat.date = put_params['date']
+            stat.hour = put_params['hour']
+            stat.weather = put_params['weather']
+            stat.temperature = put_params['temperature']
+            stat.save()
 
-        status_code = 200
-        response_message['message'] = 'Stat updated successfully!'
+            status_code = 200
+            response_message['message'] = 'Stat updated successfully!'
+        except:
+            status_code = 404
+            response_message['message'] = 'Stat not found.'
 
     response = JsonResponse(response_message, safe=False)
     response.status_code = status_code
