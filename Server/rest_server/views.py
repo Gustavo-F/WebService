@@ -43,9 +43,9 @@ def get_statistics(request):
         date = request.GET.get('date')
         
         if not date:
-            statistics = models.MeteorologicalStatistics.objects.order_by('-date')[:20]
+            statistics = models.MeteorologicalStatistics.objects.order_by('-id')
         else:
-            statistics = models.MeteorologicalStatistics.objects.filter(date=date).order_by('-date')
+            statistics = models.MeteorologicalStatistics.objects.filter(date=date).order_by('-id')
 
         statistics = [obj.as_json() for obj in statistics]
         status_code = 200

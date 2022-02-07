@@ -126,10 +126,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:7888',
-    'http://localhost:7888',
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 try:
     from .local_settings import *
